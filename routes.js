@@ -34,6 +34,7 @@ router.post("/upload", upload.single("uploadFile"), (req, res, next) => {
   file.path = `${file.path}.${extension}`;
 
   const payload = {
+    originalName: file.originalname,
     name: file.filename,
     type: file.mimetype,
     size: formatBytes(file.size),
