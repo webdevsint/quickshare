@@ -8,7 +8,7 @@ const fs = require("fs");
 
 const formatBytes = require("./utils/formatter");
 
-const connection = process.env.CONNECTION_URI; // mango-v2 database
+const database = process.env.CONNECTION_URI; // mango-v2 database
 
 const upload = multer({ dest: "uploads/" });
 
@@ -41,17 +41,28 @@ router.post("/upload", upload.single("uploadFile"), (req, res, next) => {
   };
 
   axios
-    .post(connection, payload)
+    .post(database, payload)
     .then((response) => res.status(200).json(req.file))
     .catch((err) => res.status(500).json(err));
 });
 
 // fetching files
+router.get("/files", (req, res) => {
+  const id = req.params.id;
+
+  axios
+    .get(database)
+    .then((response) => {
+      res.send(response.data);
+    })
+    .catch((err) => res.status(500).json(err));
+});
+
 router.get("/file/:id", (req, res) => {
   const id = req.params.id;
 
   axios
-    .get(connection)
+    .get(database)
     .then((response) => {
       const file = response.data.filter((item) => item.id === id);
 
@@ -65,14 +76,14 @@ router.get("/get/:id", (req, res) => {
   const id = req.params.id;
 
   axios
-    .get(connection)
+    .get(database)
     .then((response) => {
       const file = response.data.filter((item) => item.id === id);
 
       if (file.length === 0) res.status(400).json({ error: "file not found" });
       else {
         const filePath = path.resolve("./uploads", file[0].name);
-        res.sendFile(filePath);
+        res.download(filePath);
       }
     })
     .catch((err) => res.status(500).json(err));
