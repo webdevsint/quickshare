@@ -28,7 +28,7 @@ router.get("/file/:id", (req, res) => {
   res.sendFile(path.resolve("./views/file.html"));
 });
 
-router.get("/folder/:id", (req, res) => {
+router.get("/folder/:name", (req, res) => {
   res.sendFile(path.resolve("./views/folder.html"));
 });
 
@@ -55,7 +55,7 @@ router.post("/upload-file", function (req, res) {
 
     fs.writeFileSync(path.resolve("./public/data.json"), JSON.stringify(data));
 
-    res.send("file uploaded");
+    res.redirect(`/file/${id}`);
   });
 });
 
@@ -70,7 +70,6 @@ router.post("/create-folder", (req, res) => {
     fs.mkdirSync(path.resolve("./public/uploads/folders/", folderName));
 
     const folderData = {
-      id: nanoid(8),
       name: folderName,
       files: [],
       authKey: new Encryption(req.body.authKey, KEY).encrypted,
@@ -105,7 +104,7 @@ router.post("/create-folder", (req, res) => {
       JSON.stringify(folderData)
     );
 
-    res.send("Files uploaded!");
+    res.redirect(`/folder/${folderName}`);
   }
 });
 
