@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload a folder</title>
+</head>
+
+<body>
+    <form action="/create-folder" method="post" enctype="multipart/form-data">
+        <input name="name" type="text" placeholder="enter an folder name" required>
+        <input name="upload" type="file" multiple id="uploadForm" required />
+        <input name="authKey" type="text" placeholder="enter an authorization key" required>
+        <button type="submit" id="submitButton" disabled>Upload files</button>
+    </form>
+
+    <script>
+        const input = document.getElementById('uploadForm');
+
+        input.onchange = () => {
+            const files = input.files;
+
+            if (files.length < 2) {
+                alert("Please select at least 2 files.");
+            } else {
+                document.getElementById('submitButton').disabled = false
+            }
+        }
+    </script>
+</body>
+
+</html>
